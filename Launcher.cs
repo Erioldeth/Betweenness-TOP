@@ -2,9 +2,13 @@
 
 Genome<int>.Initialize();
 
+var root = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
+root = Directory.GetParent(root).FullName;
+root = Directory.GetParent(root).FullName;
+root = Directory.GetParent(root).FullName;
 
 HashSet<int> materialFilter = new();
-foreach(var line in File.ReadAllLines("input.txt"))
+foreach(var line in File.ReadAllLines(Path.Combine(root, "Data", "input.txt")))
 {
 	var materials = line.Split(' ');
 
@@ -25,14 +29,13 @@ var currentGeneration = 1;
 
 var population = Enumerable.Range(0, populationSize).Select(_ => new Entity<int>(new(true))).ToList();
 
-
 while(true)
 {
 	foreach(var entity in population)
 	{
 		if(entity.Fitness == Genome<int>.Orders.Count)
 		{
-			File.WriteAllText("output.txt", $"Generation {currentGeneration}: [{string.Join(", ", entity.Gen.Dna)}]");
+			File.WriteAllText(Path.Combine(root, "Data", "output.txt"), $"Generation {currentGeneration}: [{string.Join(", ", entity.Gen.Dna)}]");
 			return;
 		}
 		else if(currentGeneration % 100 == 0 && new Random().NextDouble() > 0.5)
